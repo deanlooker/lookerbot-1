@@ -44,13 +44,6 @@ export class SlackService extends Service {
 
     this.defaultBot.api.team.info({}, (err: any, response: any) => {
       if (response != null ? response.ok : undefined) {
-        // TODO: remove this fix once https://github.com/howdyai/botkit/pull/1453 is in
-        // FIX: This is a workaround for https://github.com/howdyai/botkit/issues/590
-        response.team.bot = {
-          id: "lookerbot",
-          name: "lookerbot",
-        }
-        // FIX
         this.controller.saveTeam(response.team, () => console.log("Saved the team information..."))
       } else {
         throw new Error(`Could not connect to the Slack API. Ensure your Slack API key is correct. (${err})`)
@@ -180,7 +173,7 @@ export class SlackService extends Service {
         const user = response.user
         if (!config.enableGuestUsers && (user.is_restricted || user.is_ultra_restricted)) {
           reply(`Sorry @${user.name}, as a guest user you're not able to use this command.`)
-        } else if (!config.enableSharedWorkspaces && user.team_id !== this.defaultBot.team_info.id && !(user.teams && user.teams.includes(this.defaultBot.team_info.id))) {
+        } else if (!config.enableSharedWorkspaces && user.team_id !== this.defaultBot.team_info.id) {
           reply(`Sorry @${user.name}, as a user from another workspace you're not able to use this command.`)
         } else if (user.is_stranger) {
           reply(`Sorry @${user.name}, as a user from another workspace you're not able to use this command.`)

@@ -1,5 +1,4 @@
 import * as AWS from "aws-sdk"
-import {PutObjectRequest} from "aws-sdk/clients/s3"
 import { Store } from "./store"
 
 export class AmazonS3Store extends Store {
@@ -15,10 +14,6 @@ export class AmazonS3Store extends Store {
       `s3-${process.env.SLACKBOT_S3_BUCKET_REGION}.amazonaws.com`
     :
       "s3.amazonaws.com"
-
-    if (!process.env.SLACKBOT_S3_BUCKET) {
-      return Promise.reject("ENV `SLACKBOT_S3_BUCKET` isn't configured.")
-    }
 
     const params = {
       ACL: "public-read",
